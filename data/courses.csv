@@ -1,0 +1,33 @@
+semester,course_code,course_name,credits,faculty,syllabus,status
+1,MA101,Engineering Mathematics I,4,Dr. Arvind Sharma,"Matrices; differential calculus; integral calculus",Completed
+1,PH101,Engineering Physics,4,Dr. Priya Nair,"Waves; optics; semiconductor basics",Completed
+1,CS101,Programming Fundamentals,4,Prof. Rajesh Kumar,"Algorithms; variables and control flow; functions; arrays",Completed
+1,ME101,Engineering Graphics,4,Prof. Anil Verma,"Orthographic projection; isometric drawing; dimensioning",Completed
+2,MA201,Engineering Mathematics II,4,Dr. Arvind Sharma,"Linear algebra; differential equations; numerical methods",Completed
+2,CH201,Engineering Chemistry,4,Dr. Sunita Rao,"Atomic structure; electrochemistry; polymers",Completed
+2,EE201,Basics of Electrical Engineering,4,Prof. K. Raman,"Circuit laws; AC circuits; electrical machines",Completed
+2,CS201,Object-Oriented Programming,4,Prof. Rajesh Kumar,"Classes and objects; inheritance; polymorphism; exceptions",Completed
+3,CS301,Data Structures,4,Prof. Vikram Sen,"Stacks; queues; trees; graphs; sorting",In Progress
+3,MA301,Discrete Mathematics,4,Dr. Meenakshi Sundaram,"Logic; sets and relations; combinatorics; graph theory",Not Started
+3,CS302,Database Systems,4,Prof. Sneha Kulkarni,"Relational model; SQL; normalization; transactions",Not Started
+3,EC301,Digital Logic Design,4,Dr. Amit Patel,"Boolean algebra; combinational circuits; sequential circuits",Not Started
+4,CS401,Design and Analysis of Algorithms,4,Prof. Vikram Sen,"Complexity; greedy algorithms; dynamic programming; graph algorithms",Not Started
+4,CS402,Operating Systems,4,Prof. Sneha Kulkarni,"Processes; threads; scheduling; memory management; file systems",Not Started
+4,CS403,Computer Organization,4,Dr. Amit Patel,"Processor design; instruction sets; pipelining; memory hierarchy",Not Started
+4,HS401,Professional Communication,4,Dr. Kavita Joshi,"Technical writing; presentations; teamwork; ethics",Not Started
+5,CS501,Computer Networks,4,Prof. Anand Deshmukh,"Network models; routing; transport protocols; network security",Not Started
+5,CS502,Software Engineering,4,Prof. Rajiv Mehta,"Requirements; design; testing; agile development",Not Started
+5,CS503,Theory of Computation,4,Dr. Arvind Sharma,"Automata; regular languages; context-free grammars; computability",Not Started
+5,CS504,Web Technologies,4,Prof. Sneha Kulkarni,"HTML and CSS; JavaScript; APIs; web application architecture",Not Started
+6,CS601,Artificial Intelligence,4,Dr. Rohit Gupta,"Search; knowledge representation; reasoning; machine learning overview",Not Started
+6,CS602,Compiler Design,4,Prof. Vikram Sen,"Lexical analysis; parsing; semantic analysis; code generation",Not Started
+6,CS603,Cloud Computing,4,Prof. Anand Deshmukh,"Virtualization; cloud services; distributed storage; deployment",Not Started
+6,CS604,Elective I - Computer Vision,4,Dr. Rohit Gupta,"Image processing; filtering; feature extraction; deep vision",Not Started
+7,CS701,Machine Learning,4,Dr. Rohit Gupta,"Supervised learning; model evaluation; feature engineering; neural networks",Not Started
+7,CS702,Information Security,4,Prof. Anand Deshmukh,"Security principles; cryptography overview; threat modeling; secure systems",Not Started
+7,CS703,Major Project I,4,Department Committee,"Problem definition; literature review; project planning; prototype",Not Started
+7,CS704,Elective II - Natural Language Processing,4,Dr. Rohit Gupta,"Text processing; language models; transformers; attention",Not Started
+8,CS801,Major Project II,4,Department Committee,"Implementation; evaluation; documentation; project presentation",Not Started
+8,CS802,Distributed Systems,4,Prof. Anand Deshmukh,"Distributed architectures; consistency; fault tolerance; coordination",Not Started
+8,CS803,Professional Elective - Blockchain,4,Prof. Rajiv Mehta,"Distributed ledgers; smart contracts; consensus; security",Not Started
+8,CS804,Internship / Industry Practice,4,Placement Cell,"Work-based learning; reflection; technical report; presentation",Not Started
