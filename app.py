@@ -182,6 +182,7 @@ with st.sidebar:
             "Plan & Checklist",
             "Ask Degree AI",
             "Data Admin",
+            "Student Feedback (Supabase)",
         ],
         label_visibility="collapsed",
     )
@@ -902,3 +903,130 @@ elif page == "Data Admin":
                 save_csv(filename, editor)
                 st.success(f"✅ Successfully saved data/{filename}!")
                 st.rerun()
+
+
+# -----------------------------------------------------------------------------
+# 12. Student Feedback (Supabase Cloud Database)
+# -----------------------------------------------------------------------------
+elif page == "Student Feedback (Supabase)":
+    heading("Student Feedback & Permanent Cloud Records", "Save form data directly as permanent records to your Supabase PostgreSQL cloud database.")
+    
+    # Read Supabase configuration from Streamlit secrets, environment, or .env
+    def get_supabase_config() -> tuple[str | None, str | None]:
+        url, key = None, None
+        try:
+            url = st.secrets.get("SUPABASE_URL")
+            key = st.secrets.get("SUPABASE_PUBLISHABLE_KEY")
+        except Exception:
+            pass
+        if not url:
+            url = os.environ.get("SUPABASE_URL")
+        if not key:
+            key = os.environ.get("SUPABASE_PUBLISHABLE_KEY")
+        if not url or not key:
+            env_file = APP_DIR / ".env"
+            if env_file.exists():
+                for line in env_file.read_text(encoding="utf-8").splitlines():
+                    line = line.strip()
+                    if line.startswith("SUPABASE_URL="):
+                        url = line.split("=", 1)[1].strip().strip('"').strip("'")
+                    elif line.startswith("SUPABASE_PUBLISHABLE_KEY="):
+                        key = line.split("=", 1)[1].strip().strip('"').strip("'")
+        return url, key
+
+    sb_url, sb_key = get_supabase_config()
+    if not sb_url or not sb_key:
+        st.error("⚠️ Supabase credentials not found. Please add SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY to .streamlit/secrets.toml or .env.")
+    else:
+        try:
+            from supabase import create_client
+            if "_supabase" not in st.session_state:
+                st.session_state["_supabase"] = create_client(sb_url, sb_key)
+            db = st.session_state["_supabase"]
+            session = db.auth.get_session()
+        except Exception as e:
+            st.error(f"Could not connect to Supabase: {e}. Check your network and Supabase project.")
+            session = None
+
+        if session is None:
+            st.subheader("Sign In to Supabase Account")
+            st.caption("Sign in with an application user created in your Supabase project (Authentication > Users).")
+            
+            with st.form("supabase_sign_in", clear_on_submit=True):
+                email = st.text_input("Email", placeholder="e.g. user@example.com")
+                password = st.text_input("Password", type="password")
+                sign_in_btn = st.form_submit_button("Sign In", type="primary")
+                
+            if sign_in_btn:
+                if not email.strip() or not password:
+                    st.warning("Enter your email and password.")
+                else:
+                    try:
+                        res = db.auth.sign_in_with_password({"email": email.strip(), "password": password})
+                        if res.session is not None:
+                            st.rerun()
+                        else:
+                            st.error("No session was created. Check your account confirmation status in Supabase.")
+                    except Exception as err:
+                        st.error(f"Sign in failed: {err}. Verify your credentials in Supabase Dashboard.")
+            
+            st.info("💡 **Setup Note**: To create a user account, open your **Supabase Dashboard > Authentication > Users > Add User**, enter an email and password, and check **Auto Confirm User**.")
+        else:
+            c1, c2 = st.columns([3, 1])
+            with c1:
+                st.markdown(f"**Signed in as:** `{session.user.email}` &nbsp;<span class='status-pill'>Authenticated</span>", unsafe_allow_html=True)
+            with c2:
+                if st.button("Sign Out", type="secondary"):
+                    try:
+                        db.auth.sign_out({"scope": "local"})
+                    except Exception:
+                        pass
+                    st.session_state.pop("_supabase", None)
+                    st.rerun()
+                    
+            st.divider()
+            
+            st.subheader("Add Feedback / Academic Note")
+            with st.form("supabase_feedback_form"):
+                fb_name = st.text_input("Your Name", max_chars=100)
+                fb_message = st.text_area("Message / Note", max_chars=2000, placeholder="Enter your feedback, study note, or question...")
+                save_btn = st.form_submit_button("Save", type="primary")
+                
+            if save_btn:
+                name_clean, msg_clean = fb_name.strip(), fb_message.strip()
+                if not name_clean or not msg_clean:
+                    st.warning("Enter both your name and a message.")
+                else:
+                    try:
+                        insert_res = (
+                            db.table("app_feedback")
+                            .insert({"name": name_clean, "message": msg_clean})
+                            .execute()
+                        )
+                        st.success("✅ Saved in Supabase.")
+                        if insert_res.data:
+                            st.caption(f"Record ID: `{insert_res.data[0].get('id')}`")
+                    except Exception as err:
+                        st.error(f"Save could not be confirmed: {err}. Refresh records before retrying.")
+
+            st.divider()
+            st.subheader("Your Saved Feedback")
+            if st.button("Refresh records"):
+                st.rerun()
+                
+            try:
+                records_res = (
+                    db.table("app_feedback")
+                    .select("id, name, message, created_at")
+                    .order("created_at", desc=True)
+                    .limit(50)
+                    .execute()
+                )
+                if records_res.data:
+                    records_df = pd.DataFrame(records_res.data)
+                    st.dataframe(records_df, hide_index=True, use_container_width=True)
+                else:
+                    st.info("No feedback saved for this account yet.")
+            except Exception as read_err:
+                st.error(f"Could not load records. Check the table, permissions and session: {read_err}")
+

@@ -57,6 +57,24 @@ The application is completely maintainable through clean CSV datasets in `/data/
 9. **Plan & Checklist**: Degree execution control panel with summary metrics (Total, Done, Due in 7 Days, Overdue), **This Week** action items, **Semester Milestones**, **Degree Milestones**, and an interactive editor with save capability.
 10. **Ask Degree AI**: Grounded chatbot answering student queries strictly using loaded CSV data with strict safety guardrails against inventing formulas or rules.
 11. **Data Admin**: Built-in data editor allowing students to update and persist all 7 CSV files directly through the UI.
+12. **Student Feedback (Supabase)**: Permanent cloud record submission and readback powered by Supabase PostgreSQL, user authentication, and Row Level Security (RLS).
+
+---
+
+## ⚡ Supabase Cloud Database Integration
+
+This project connects to **Supabase PostgreSQL** for permanent data storage with user-scoped Row Level Security:
+
+1. **Database Schema & Policies**: Defined in [schema.sql](file:///c:/Users/YOGA/OneDrive/Desktop/engineering_degree-os/schema.sql) (`app_feedback` table with `auth.uid()` ownership).
+2. **Configuration**: Configured via `.streamlit/secrets.toml` or `.env`:
+   ```toml
+   SUPABASE_URL = "https://your-project.supabase.co"
+   SUPABASE_PUBLISHABLE_KEY = "sb_publishable_your_key"
+   ```
+3. **Standalone Feedback App**: You can also run the isolated starter app:
+   ```bash
+   streamlit run feedback_app.py
+   ```
 
 ---
 
