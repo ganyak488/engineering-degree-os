@@ -794,9 +794,21 @@ elif page == "Ask Degree AI":
         if key:
             return key
         try:
-            return st.secrets.get("GEMINI_API_KEY")
-        except StreamlitSecretNotFoundError:
-            return None
+            sec_key = st.secrets.get("GEMINI_API_KEY")
+            if sec_key:
+                return sec_key
+        except Exception:
+            pass
+        # Check .env file in project directory
+        env_file = APP_DIR / ".env"
+        if env_file.exists():
+            for line in env_file.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if line.startswith("GEMINI_API_KEY="):
+                    val = line.split("=", 1)[1].strip().strip('"').strip("'")
+                    if val:
+                        return val
+        return None
 
     def ask_gemini(question: str, fallback: tuple[str, str]) -> tuple[str, str] | None:
         api_key = gemini_api_key()
@@ -842,7 +854,7 @@ elif page == "Ask Degree AI":
                 area = area_match.group(1).capitalize() if area_match else fallback[1]
                 clean_text = re.sub(r"Data area:\s*(Courses|Calendar|Assessments|Scores|Plan)", "", text, flags=re.IGNORECASE).strip()
                 return clean_text, area
-        except APIError:
+        except Exception:
             return fallback
         return fallback
 
